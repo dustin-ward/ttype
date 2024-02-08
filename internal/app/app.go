@@ -37,7 +37,7 @@ func NewAppModel(init_state AppState) tea.Model {
 	return AppModel{
 		CurState:      init_state,
 		Cursor:        cursor.New(),
-		remainingText: init_text,
+		remainingText: init_text[:len(init_text)-1],
 		pos:           0,
 	}
 }
@@ -59,9 +59,21 @@ func (m AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m AppModel) View() string {
-	return fmt.Sprintf("%s%s%s",
-		styles.HiddenText.Render(m.finishedText),
-		styles.WrongText.Render(m.wrongText),
-		styles.ActiveText.Render(m.remainingText),
-	)
+	var view_text string
+	switch m.CurState {
+	case StateDefault:
+		view_text = fmt.Sprintf("%s%s%s",
+			styles.HiddenText.Render(m.finishedText),
+			styles.WrongText.Render(m.wrongText),
+			styles.HiddenText.Render(m.remainingText),
+		)
+
+	case StateTyping:
+		view_text = fmt.Sprintf("%s%s%s",
+			styles.HiddenText.Render(m.finishedText),
+			styles.WrongText.Render(m.wrongText),
+			styles.ActiveText.Render(m.remainingText),
+		)
+	}
+	return view_text
 }

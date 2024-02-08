@@ -29,16 +29,22 @@ func typingHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.pos--
 			}
 		case "enter":
-			return NewAppModel(StateTyping), nil
+			m = NewAppModel(StateTyping).(AppModel)
 		default:
-			if len(m.wrongText) == 0 && keypress == string(m.remainingText[0]) {
-				m.finishedText += string(m.remainingText[0])
-			} else {
-				m.wrongText += string(m.remainingText[0])
+			if len(m.remainingText) > 0 {
+				if len(m.wrongText) == 0 && keypress == string(m.remainingText[0]) {
+					m.finishedText += string(m.remainingText[0])
+				} else {
+					m.wrongText += string(m.remainingText[0])
+				}
+				m.remainingText = m.remainingText[1:]
+				m.pos++
 			}
-			m.remainingText = m.remainingText[1:]
-			m.pos++
 		}
+	}
+
+	if len(m.remainingText)+len(m.wrongText) == 0 {
+		m = NewAppModel(StateTyping).(AppModel)
 	}
 
 	cmds = append(cmds, m.Cursor.BlinkCmd())
