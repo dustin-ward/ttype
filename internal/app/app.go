@@ -25,6 +25,7 @@ type AppModel struct {
 	wrongText     string
 	remainingText string
 	pos           int
+	quitting      bool
 }
 
 func NewAppModel(init_state AppState) tea.Model {
@@ -59,6 +60,10 @@ func (m AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m AppModel) View() string {
+	if m.quitting {
+		return ""
+	}
+
 	var view_text string
 	switch m.CurState {
 	case StateDefault:
@@ -75,5 +80,6 @@ func (m AppModel) View() string {
 			styles.ActiveText.Render(m.remainingText),
 		)
 	}
-	return view_text
+
+	return styles.TextBox.Render(view_text)
 }
