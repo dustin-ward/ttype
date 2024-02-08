@@ -7,6 +7,7 @@ import (
 	"github.com/charmbracelet/bubbles/cursor"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/dustin-ward/termtyping/internal/data"
+	"github.com/dustin-ward/termtyping/internal/styles"
 )
 
 type AppState int
@@ -18,21 +19,26 @@ const (
 
 type AppModel struct {
 	CurState AppState
-	CurText  []string
 	Cursor   cursor.Model
+
+	finishedText  string
+	wrongText     string
+	remainingText string
+	pos           int
 }
 
-func NewAppModel() tea.Model {
+func NewAppModel(init_state AppState) tea.Model {
 	const NUM_WORDS = 20
-	init_text := make([]string, NUM_WORDS)
-	for i := range init_text {
-		init_text[i] = data.GetWord()
+	init_text := ""
+	for i := 0; i < NUM_WORDS; i++ {
+		init_text += data.GetWord() + " "
 	}
 
 	return AppModel{
-		CurState: StateDefault,
-		CurText:  init_text,
-		Cursor:   cursor.New(),
+		CurState:      init_state,
+		Cursor:        cursor.New(),
+		remainingText: init_text,
+		pos:           0,
 	}
 }
 
@@ -53,15 +59,9 @@ func (m AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m AppModel) View() string {
-	cursor := ""
-	if m.CurState == StateTyping {
-		cursor = "_"
-	}
-
-	display_text := ""
-	for _, word := range m.CurText {
-		display_text += " " + word
-	}
-
-	return fmt.Sprintf("%d: %s%s", m.CurState, display_text, cursor)
+	return fmt.Sprintf("%s%s%s",
+		styles.HiddenText.Render(m.finishedText),
+		styles.WrongText.Render(m.wrongText),
+		styles.ActiveText.Render(m.remainingText),
+	)
 }

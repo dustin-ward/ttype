@@ -16,15 +16,31 @@ func typingHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.CurState = StateDefault
 
 		case "backspace":
-			m.CurText = m.CurText[:max(len(m.CurText)-1, 0)]
+			if m.pos > 0 {
+				var bs_char string
+				if len(m.wrongText) > 0 {
+					bs_char = string(m.wrongText[len(m.wrongText)-1])
+					m.wrongText = m.wrongText[:len(m.wrongText)-1]
+				} else {
+					bs_char = string(m.finishedText[len(m.finishedText)-1])
+					m.finishedText = m.finishedText[:len(m.finishedText)-1]
+				}
+				m.remainingText = bs_char + m.remainingText
+				m.pos--
+			}
 		case "enter":
-			m.CurText = append(m.CurText, "\n")
-		case "tab":
-			m.CurText = append(m.CurText, "\t")
+			return NewAppModel(StateTyping), nil
 		default:
-			m.CurText = append(m.CurText, keypress)
-
+			if len(m.wrongText) == 0 && keypress == string(m.remainingText[0]) {
+				m.finishedText += string(m.remainingText[0])
+			} else {
+				m.wrongText += string(m.remainingText[0])
+			}
+			m.remainingText = m.remainingText[1:]
+			m.pos++
 		}
 	}
+
+	cmds = append(cmds, m.Cursor.BlinkCmd())
 	return m, tea.Batch(cmds...)
 }
