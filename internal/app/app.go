@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/charmbracelet/bubbles/cursor"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/dustin-ward/termtyping/internal/data"
 )
 
 type AppState int
@@ -16,13 +18,21 @@ const (
 
 type AppModel struct {
 	CurState AppState
-	CurText  []rune
+	CurText  []string
+	Cursor   cursor.Model
 }
 
 func NewAppModel() tea.Model {
+	const NUM_WORDS = 20
+	init_text := make([]string, NUM_WORDS)
+	for i := range init_text {
+		init_text[i] = data.GetWord()
+	}
+
 	return AppModel{
 		CurState: StateDefault,
-		CurText:  []rune("Type Here:"),
+		CurText:  init_text,
+		Cursor:   cursor.New(),
 	}
 }
 
@@ -47,5 +57,11 @@ func (m AppModel) View() string {
 	if m.CurState == StateTyping {
 		cursor = "_"
 	}
-	return fmt.Sprintf("%d: %s%s", m.CurState, string(m.CurText), cursor)
+
+	display_text := ""
+	for _, word := range m.CurText {
+		display_text += " " + word
+	}
+
+	return fmt.Sprintf("%d: %s%s", m.CurState, display_text, cursor)
 }
