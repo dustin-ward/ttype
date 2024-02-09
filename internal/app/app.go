@@ -1,11 +1,12 @@
 package app
 
 import (
-	"fmt"
 	"log"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/cursor"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/dustin-ward/termtyping/internal/character"
 	"github.com/dustin-ward/termtyping/internal/data"
 	"github.com/dustin-ward/termtyping/internal/styles"
 )
@@ -21,25 +22,32 @@ type AppModel struct {
 	CurState AppState
 	Cursor   cursor.Model
 
-	finishedText  string
-	wrongText     string
-	remainingText string
-	pos           int
-	quitting      bool
+	chars    []character.CharacterModel
+	text     string
+	pos      int
+	quitting bool
 }
 
 func NewAppModel(init_state AppState) tea.Model {
 	const NUM_WORDS = 20
-	init_text := ""
+	chars := make([]character.CharacterModel, 0)
+	text := ""
 	for i := 0; i < NUM_WORDS; i++ {
-		init_text += data.GetWord() + " "
+		word := data.GetWord() + " "
+		text += word
+		for _, ch := range word {
+			chars = append(chars, character.NewCharacter(ch))
+		}
 	}
+	chars = chars[:len(chars)-1]
+	text = text[:len(text)-1]
 
 	return AppModel{
-		CurState:      init_state,
-		Cursor:        cursor.New(),
-		remainingText: init_text[:len(init_text)-1],
-		pos:           0,
+		CurState: init_state,
+		Cursor:   cursor.New(),
+		chars:    chars,
+		text:     text,
+		pos:      0,
 	}
 }
 
@@ -67,18 +75,21 @@ func (m AppModel) View() string {
 	var view_text string
 	switch m.CurState {
 	case StateDefault:
-		view_text = fmt.Sprintf("%s%s%s",
-			styles.HiddenText.Render(m.finishedText),
-			styles.WrongText.Render(m.wrongText),
-			styles.HiddenText.Render(m.remainingText),
-		)
+		b := strings.Builder{}
+		for _, ch := range m.chars {
+			curState := ch.State
+			ch.State = character.FinishedState
+			b.WriteString(ch.View())
+			ch.State = curState
+		}
+		view_text = b.String()
 
 	case StateTyping:
-		view_text = fmt.Sprintf("%s%s%s",
-			styles.HiddenText.Render(m.finishedText),
-			styles.WrongText.Render(m.wrongText),
-			styles.ActiveText.Render(m.remainingText),
-		)
+		b := strings.Builder{}
+		for _, ch := range m.chars {
+			b.WriteString(ch.View())
+		}
+		view_text = b.String()
 	}
 
 	return styles.TextBox.Render(view_text)
