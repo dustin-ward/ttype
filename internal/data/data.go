@@ -17,6 +17,7 @@ func init() {
 	}
 }
 
+// Return random word from dataset
 func GetWord() string {
 	return words_english[rand.Intn(len(words_english))]
 }

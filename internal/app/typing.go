@@ -19,11 +19,15 @@ func typingHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.CurState = StateDefault
 
 		case "enter":
+			// Enter key will generate new text
 			m = NewAppModel(StateTyping).(AppModel)
 		default:
 			if keypress == m.chars[m.pos].Val {
-				m.chars[m.pos].State = character.FinishedState
+				m.chars[m.pos].State = character.CorrectState
 				m.pos++
+				if m.pos < len(m.text) {
+					m.chars[m.pos].State = character.ActiveState
+				}
 			} else {
 				m.chars[m.pos].State = character.WrongState
 			}
@@ -31,9 +35,9 @@ func typingHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	if m.pos == len(m.text) {
+		// All of the current text is completed. Reset
 		m = NewAppModel(StateTyping).(AppModel)
 	}
 
-	cmds = append(cmds, m.Cursor.BlinkCmd())
 	return m, tea.Batch(cmds...)
 }

@@ -2,10 +2,16 @@ package styles
 
 import "github.com/charmbracelet/lipgloss"
 
-var (
-	HiddenText = lipgloss.NewStyle().Foreground(Grey)
-	ActiveText = lipgloss.NewStyle().Foreground(White)
-	WrongText  = lipgloss.NewStyle().Foreground(Red)
+const (
+	APP_WIDTH = 60
+)
 
-	TextBox = lipgloss.NewStyle().BorderStyle(lipgloss.RoundedBorder()).Width(60).Padding(1, 2).Margin(0, 2).Foreground(White)
+var (
+	HiddenText    = lipgloss.NewStyle().Foreground(Grey)
+	CorrectText   = lipgloss.NewStyle().Foreground(Green)
+	WrongText     = lipgloss.NewStyle().Foreground(Red)
+	RemainingText = lipgloss.NewStyle().Foreground(LightGrey)
+	ActiveText    = lipgloss.NewStyle().Foreground(White)
+
+	TextBox = lipgloss.NewStyle().BorderStyle(lipgloss.RoundedBorder()).Width(APP_WIDTH).Padding(1, 2).Margin(0, 2).Foreground(White)
 )
