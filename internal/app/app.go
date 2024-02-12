@@ -63,6 +63,9 @@ func NewAppModel(init_state AppState) tea.Model {
 	chars = chars[:len(chars)-1]
 	text = text[:len(text)-1]
 
+	// First character is active
+	chars[0].State = character.ActiveState
+
 	return AppModel{
 		CurState: init_state,
 		chars:    chars,
