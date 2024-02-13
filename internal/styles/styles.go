@@ -4,6 +4,7 @@ import "github.com/charmbracelet/lipgloss"
 
 const (
 	APP_WIDTH = 60
+	MAX_LINES = 3
 )
 
 var (

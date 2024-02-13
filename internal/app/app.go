@@ -30,38 +30,34 @@ type AppModel struct {
 const NUM_WORDS = 20
 
 func NewAppModel(init_state AppState) tea.Model {
-	chars := make([]character.CharacterModel, 0)
 	text := ""
-
-	// A bunch of gross stuff to track which words are at the
-	// end of each line. We need to know this because we let
-	// bubbletea do the text wrapping, but the last space on
-	// each line needs to be handled differently to show the
-	// '_' character.
-	space_pos := -1
-	start_of_cur_line := 0
+	line_len := 0
+	lines := 0
 	for i := 0; i < NUM_WORDS; i++ {
 		// Pull random word from data
 		word := data.GetWord() + " "
 
+		// Manually insert newlines
+		if line_len+len(word) >= styles.APP_WIDTH-4 {
+			text += "\n"
+			line_len = len(word)
+			lines++
+
+			if lines == styles.MAX_LINES {
+				break
+			}
+		} else {
+			line_len += len(word)
+		}
 		text += word
-		for _, ch := range word {
-			chars = append(chars, character.NewCharacter(ch))
-		}
-
-		// Deal with last word of each line
-		space_line := (space_pos - start_of_cur_line) / (styles.APP_WIDTH - 2)
-		cur_line := (len(text) - start_of_cur_line) / (styles.APP_WIDTH - 2)
-		if space_pos > 0 && (space_line != cur_line) {
-			chars[space_pos].EndSpace = true
-			start_of_cur_line = len(text) - (len(word) - 1)
-		}
-
-		space_pos = len(text) - 1
 	}
-	// Remove space from last word
-	chars = chars[:len(chars)-1]
-	text = text[:len(text)-1]
+	text = strings.TrimSpace(text)
+
+	// Fill models array
+	chars := make([]character.CharacterModel, len(text))
+	for i, ch := range text {
+		chars[i] = character.NewCharacter(ch)
+	}
 
 	// First character is active
 	chars[0].State = character.ActiveState

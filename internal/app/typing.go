@@ -26,6 +26,9 @@ func typingHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.chars[m.pos].State = character.CorrectState
 				m.pos++
 				if m.pos < len(m.text) {
+					if m.text[m.pos] == '\n' {
+						m.pos++
+					}
 					m.chars[m.pos].State = character.ActiveState
 				}
 			} else {
