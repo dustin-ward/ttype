@@ -5,8 +5,10 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/dustin-ward/termtyping/internal/character"
 	"github.com/dustin-ward/termtyping/internal/data"
+	"github.com/dustin-ward/termtyping/internal/statusbar"
 	"github.com/dustin-ward/termtyping/internal/styles"
 )
 
@@ -24,6 +26,8 @@ type AppModel struct {
 	text     string
 	pos      int
 	quitting bool
+
+	status_bar statusbar.StatusBarModel
 }
 
 // Number of words to use per each test
@@ -112,5 +116,9 @@ func (m AppModel) View() string {
 		view_text = b.String()
 	}
 
-	return styles.TextBox.Render(view_text)
+	return styles.BorderStyle.Render(lipgloss.JoinVertical(
+		lipgloss.Left,
+		styles.StatusBar.Render(m.status_bar.View()),
+		styles.TextBox.Render(view_text),
+	))
 }

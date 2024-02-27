@@ -14,5 +14,7 @@ var (
 	RemainingText = lipgloss.NewStyle().Foreground(LightGrey)
 	ActiveText    = lipgloss.NewStyle().Foreground(White)
 
-	TextBox = lipgloss.NewStyle().BorderStyle(lipgloss.RoundedBorder()).Width(APP_WIDTH).Padding(1, 2).Margin(0, 2).Foreground(White)
+	TextBox     = lipgloss.NewStyle().Width(APP_WIDTH).Margin(0, 2)
+	StatusBar   = lipgloss.NewStyle().Width(APP_WIDTH).Margin(0, 2).Border(lipgloss.NormalBorder()).BorderForeground(LightGrey).BorderTop(false).BorderLeft(false).BorderRight(false)
+	BorderStyle = lipgloss.NewStyle().BorderStyle(lipgloss.RoundedBorder()).Foreground(White)
 )
