@@ -32,6 +32,7 @@ type AppModel struct {
 
 // Number of words to use per each test
 const NUM_WORDS = 20
+const PUNC_CHANCE = 0.2
 
 func NewAppModel(init_state AppState) tea.Model {
 	text := ""
@@ -39,7 +40,7 @@ func NewAppModel(init_state AppState) tea.Model {
 	lines := 0
 	for i := 0; i < NUM_WORDS; i++ {
 		// Pull random word from data
-		word := data.GetWord() + " "
+		word := data.GetWord(PUNC_CHANCE) + " "
 
 		// Manually insert newlines
 		if line_len+len(word) >= styles.APP_WIDTH-4 {

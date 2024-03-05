@@ -11,6 +11,8 @@ import (
 var words_english_json []byte
 var words_english []string
 
+var punctuation string = ".,?!;:"
+
 func init() {
 	if err := json.Unmarshal(words_english_json, &words_english); err != nil {
 		log.Fatal("data/init:", err)
@@ -18,6 +20,13 @@ func init() {
 }
 
 // Return random word from dataset
-func GetWord() string {
-	return words_english[rand.Intn(len(words_english))]
+func GetWord(punctuation_chance float64) string {
+	word := words_english[rand.Intn(len(words_english))]
+
+	if rand.Float64() < punctuation_chance {
+		p := punctuation[rand.Intn(len(punctuation))]
+		word += string(p)
+	}
+
+	return word
 }
