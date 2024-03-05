@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"math/rand"
+	"strings"
 )
 
 //go:embed words_english.json
@@ -20,8 +21,12 @@ func init() {
 }
 
 // Return random word from dataset
-func GetWord(punctuation_chance float64) string {
+func GetWord(punctuation_chance, capital_chance float64) string {
 	word := words_english[rand.Intn(len(words_english))]
+
+	if rand.Float64() < capital_chance {
+		word = strings.Title(word)
+	}
 
 	if rand.Float64() < punctuation_chance {
 		p := punctuation[rand.Intn(len(punctuation))]
