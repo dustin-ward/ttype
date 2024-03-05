@@ -68,10 +68,11 @@ func NewAppModel(init_state AppState) tea.Model {
 	chars[0].State = character.ActiveState
 
 	return AppModel{
-		CurState: init_state,
-		chars:    chars,
-		text:     text,
-		pos:      0,
+		CurState:   init_state,
+		chars:      chars,
+		text:       text,
+		pos:        0,
+		status_bar: statusbar.NewStatusBar(int(init_state)),
 	}
 }
 
