@@ -7,8 +7,8 @@ import (
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/dustin-ward/termtyping/internal/app"
-	"github.com/dustin-ward/termtyping/internal/config"
+	"github.com/dustin-ward/ttype/internal/app"
+	"github.com/dustin-ward/ttype/internal/config"
 	"github.com/muesli/termenv"
 )
 

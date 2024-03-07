@@ -7,7 +7,7 @@ import (
 	"math/rand"
 	"strings"
 
-	"github.com/dustin-ward/termtyping/internal/styles"
+	"github.com/dustin-ward/ttype/internal/styles"
 )
 
 //go:embed words_english.json

@@ -2,8 +2,8 @@ package app
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/dustin-ward/termtyping/internal/stats"
-	"github.com/dustin-ward/termtyping/internal/statusbar"
+	"github.com/dustin-ward/ttype/internal/stats"
+	"github.com/dustin-ward/ttype/internal/statusbar"
 )
 
 func defaultHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {

@@ -1,4 +1,4 @@
-module github.com/dustin-ward/termtyping
+module github.com/dustin-ward/ttype
 
 go 1.18
 

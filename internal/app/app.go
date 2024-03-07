@@ -6,12 +6,12 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/dustin-ward/termtyping/internal/character"
-	"github.com/dustin-ward/termtyping/internal/config"
-	"github.com/dustin-ward/termtyping/internal/data"
-	"github.com/dustin-ward/termtyping/internal/stats"
-	"github.com/dustin-ward/termtyping/internal/statusbar"
-	"github.com/dustin-ward/termtyping/internal/styles"
+	"github.com/dustin-ward/ttype/internal/character"
+	"github.com/dustin-ward/ttype/internal/config"
+	"github.com/dustin-ward/ttype/internal/data"
+	"github.com/dustin-ward/ttype/internal/stats"
+	"github.com/dustin-ward/ttype/internal/statusbar"
+	"github.com/dustin-ward/ttype/internal/styles"
 )
 
 var Config config.Config

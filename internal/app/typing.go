@@ -4,7 +4,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/dustin-ward/termtyping/internal/character"
+	"github.com/dustin-ward/ttype/internal/character"
 )
 
 type NewTextMsg struct{}

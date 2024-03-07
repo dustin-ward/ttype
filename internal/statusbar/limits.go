@@ -2,7 +2,7 @@ package statusbar
 
 import (
 	"github.com/charmbracelet/lipgloss"
-	"github.com/dustin-ward/termtyping/internal/styles"
+	"github.com/dustin-ward/ttype/internal/styles"
 )
 
 // Colour gradient stops for acc metric
