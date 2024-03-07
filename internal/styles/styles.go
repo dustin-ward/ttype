@@ -14,7 +14,11 @@ var (
 	RemainingText = lipgloss.NewStyle().Foreground(LightGrey)
 	ActiveText    = lipgloss.NewStyle().Foreground(White)
 
+	// Regular Mode
 	TextBox     = lipgloss.NewStyle().Width(APP_WIDTH).Margin(0, 2)
 	StatusBar   = lipgloss.NewStyle().Width(APP_WIDTH).Margin(0, 2).Border(lipgloss.NormalBorder()).BorderForeground(LightGrey).BorderTop(false).BorderLeft(false).BorderRight(false)
 	BorderStyle = lipgloss.NewStyle().BorderStyle(lipgloss.RoundedBorder()).Foreground(White)
+
+	// Zen Mode
+	Zen_TextBox     = lipgloss.NewStyle().Width(APP_WIDTH).Margin(1, 2)
 )

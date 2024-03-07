@@ -7,11 +7,14 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/dustin-ward/termtyping/internal/character"
+	"github.com/dustin-ward/termtyping/internal/config"
 	"github.com/dustin-ward/termtyping/internal/data"
 	"github.com/dustin-ward/termtyping/internal/stats"
 	"github.com/dustin-ward/termtyping/internal/statusbar"
 	"github.com/dustin-ward/termtyping/internal/styles"
 )
+
+var Config config.Config
 
 type AppState int
 
@@ -107,9 +110,15 @@ func (m AppModel) View() string {
 		view_text = b.String()
 	}
 
-	return styles.BorderStyle.Render(lipgloss.JoinVertical(
-		lipgloss.Left,
-		styles.StatusBar.Render(m.status_bar.View()),
-		styles.TextBox.Render(view_text),
-	))
+	var view string
+	if Config.ZenMode {
+		view = styles.BorderStyle.Render(styles.Zen_TextBox.Render(view_text))
+	} else {
+		view = styles.BorderStyle.Render(lipgloss.JoinVertical(
+			lipgloss.Left,
+			styles.StatusBar.Render(m.status_bar.View()),
+			styles.TextBox.Render(view_text),
+		))
+	}
+	return view
 }
