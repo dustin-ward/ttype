@@ -1,6 +1,8 @@
 package app
 
 import (
+	"time"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/dustin-ward/termtyping/internal/character"
 )
@@ -31,6 +33,9 @@ func typingHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			if keypress == m.chars[m.pos].Val {
 				m.stats.NumCorrect++
+				if m.pos == 0 {
+					m.stats.TimeStarted = time.Now()
+				}
 
 				m.chars[m.pos].State = character.CorrectState
 				m.pos++
