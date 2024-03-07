@@ -3,9 +3,9 @@ package app
 import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/dustin-ward/termtyping/internal/character"
-	"github.com/dustin-ward/termtyping/internal/statusbar"
 )
 
+type NewTextMsg struct{}
 type ResetTextMsg struct{}
 
 func typingHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -19,12 +19,11 @@ func typingHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {
 			cmds = append(cmds, cmd)
 
 		case "esc":
-			m.CurState = StateDefault
-			m.status_bar.CurState = statusbar.StateDefault
+			return NewAppModelWithText(m.text, StateDefault), func() tea.Msg { return ResetTextMsg{} }
 
 		case "enter":
 			// Enter key will generate new text
-			return NewAppModel(StateTyping), func() tea.Msg { return ResetTextMsg{} }
+			return NewAppModel(StateTyping), func() tea.Msg { return NewTextMsg{} }
 		default:
 			if keypress == m.chars[m.pos].Val {
 				m.chars[m.pos].State = character.CorrectState
@@ -43,7 +42,7 @@ func typingHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	if m.pos == len(m.text) {
 		// All of the current text is completed. Reset
-		return NewAppModel(StateTyping), func() tea.Msg { return ResetTextMsg{} }
+		return NewAppModel(StateTyping), func() tea.Msg { return NewTextMsg{} }
 	}
 
 	return m, tea.Batch(cmds...)

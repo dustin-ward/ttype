@@ -28,6 +28,9 @@ type AppModel struct {
 	quitting bool
 
 	status_bar statusbar.StatusBarModel
+
+	num_typed   int
+	num_correct int
 }
 
 // Number of words to use per each test
@@ -36,29 +39,11 @@ const PUNC_CHANCE = 0.2
 const CAPS_CHANCE = 0.2
 
 func NewAppModel(init_state AppState) tea.Model {
-	text := ""
-	line_len := 0
-	lines := 0
-	for i := 0; i < NUM_WORDS; i++ {
-		// Pull random word from data
-		word := data.GetWord(PUNC_CHANCE, CAPS_CHANCE) + " "
+	text := data.GenText(NUM_WORDS, PUNC_CHANCE, CAPS_CHANCE)
+	return NewAppModelWithText(text, init_state)
+}
 
-		// Manually insert newlines
-		if line_len+len(word) >= styles.APP_WIDTH-4 {
-			text += "\n"
-			line_len = len(word)
-			lines++
-
-			if lines == styles.MAX_LINES {
-				break
-			}
-		} else {
-			line_len += len(word)
-		}
-		text += word
-	}
-	text = strings.TrimSpace(text)
-
+func NewAppModelWithText(text string, init_state AppState) tea.Model {
 	// Fill models array
 	chars := make([]character.CharacterModel, len(text))
 	for i, ch := range text {

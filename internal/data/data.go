@@ -6,6 +6,8 @@ import (
 	"log"
 	"math/rand"
 	"strings"
+
+	"github.com/dustin-ward/termtyping/internal/styles"
 )
 
 //go:embed words_english.json
@@ -21,7 +23,7 @@ func init() {
 }
 
 // Return random word from dataset
-func GetWord(punctuation_chance, capital_chance float64) string {
+func getWord(punctuation_chance, capital_chance float64) string {
 	word := words_english[rand.Intn(len(words_english))]
 
 	if rand.Float64() < capital_chance {
@@ -34,4 +36,30 @@ func GetWord(punctuation_chance, capital_chance float64) string {
 	}
 
 	return word
+}
+
+func GenText(num_words int, punc_chance, caps_chance float64) string {
+	text := ""
+	line_len := 0
+	lines := 0
+	for i := 0; i < num_words; i++ {
+		// Pull random word from data
+		word := getWord(punc_chance, caps_chance) + " "
+
+		// Manually insert newlines
+		if line_len+len(word) >= styles.APP_WIDTH-4 {
+			text += "\n"
+			line_len = len(word)
+			lines++
+
+			if lines == styles.MAX_LINES {
+				break
+			}
+		} else {
+			line_len += len(word)
+		}
+		text += word
+	}
+
+	return strings.TrimSpace(text)
 }
