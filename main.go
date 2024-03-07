@@ -12,7 +12,7 @@ import (
 	"github.com/muesli/termenv"
 )
 
-var VERSION string = "v0.3.0"
+var VERSION string = "v0.4.0"
 
 var zen_flag bool
 var version_flag bool
