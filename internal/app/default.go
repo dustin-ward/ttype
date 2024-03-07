@@ -2,6 +2,7 @@ package app
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/dustin-ward/termtyping/internal/stats"
 	"github.com/dustin-ward/termtyping/internal/statusbar"
 )
 
@@ -17,6 +18,7 @@ func defaultHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case "enter":
 			m.CurState = StateTyping
+			m.stats = stats.NewStats()
 			m.status_bar.CurState = statusbar.StateTyping
 		}
 	}

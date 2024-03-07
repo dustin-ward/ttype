@@ -8,6 +8,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/dustin-ward/termtyping/internal/character"
 	"github.com/dustin-ward/termtyping/internal/data"
+	"github.com/dustin-ward/termtyping/internal/stats"
 	"github.com/dustin-ward/termtyping/internal/statusbar"
 	"github.com/dustin-ward/termtyping/internal/styles"
 )
@@ -29,8 +30,7 @@ type AppModel struct {
 
 	status_bar statusbar.StatusBarModel
 
-	num_typed   int
-	num_correct int
+	stats *stats.Stats
 }
 
 // Number of words to use per each test
@@ -38,12 +38,14 @@ const NUM_WORDS = 20
 const PUNC_CHANCE = 0.2
 const CAPS_CHANCE = 0.2
 
-func NewAppModel(init_state AppState) tea.Model {
+func NewAppModel(init_state AppState, prev_stats *stats.Stats) tea.Model {
+	// Generate new body of text
 	text := data.GenText(NUM_WORDS, PUNC_CHANCE, CAPS_CHANCE)
-	return NewAppModelWithText(text, init_state)
+
+	return NewAppModelWithText(text, init_state, prev_stats)
 }
 
-func NewAppModelWithText(text string, init_state AppState) tea.Model {
+func NewAppModelWithText(text string, init_state AppState, prev_stats *stats.Stats) tea.Model {
 	// Fill models array
 	chars := make([]character.CharacterModel, len(text))
 	for i, ch := range text {
@@ -58,7 +60,8 @@ func NewAppModelWithText(text string, init_state AppState) tea.Model {
 		chars:      chars,
 		text:       text,
 		pos:        0,
-		status_bar: statusbar.NewStatusBar(int(init_state)),
+		status_bar: statusbar.NewStatusBar(int(init_state), prev_stats),
+		stats:      stats.NewStats(),
 	}
 }
 

@@ -38,6 +38,9 @@ func getWord(punctuation_chance, capital_chance float64) string {
 	return word
 }
 
+// Generate full body of text with num_words words.
+// Punctuation will be added with a punc_chance*100% chance.
+// Words will be capilized with a caps_chance*100% chance.
 func GenText(num_words int, punc_chance, caps_chance float64) string {
 	text := ""
 	line_len := 0

@@ -19,13 +19,19 @@ func typingHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {
 			cmds = append(cmds, cmd)
 
 		case "esc":
-			return NewAppModelWithText(m.text, StateDefault), func() tea.Msg { return ResetTextMsg{} }
+			// Escape will reset the state of each character while keeping the same text
+			return NewAppModelWithText(m.text, StateDefault, nil), func() tea.Msg { return ResetTextMsg{} }
 
 		case "enter":
 			// Enter key will generate new text
-			return NewAppModel(StateTyping), func() tea.Msg { return NewTextMsg{} }
+			return NewAppModel(StateTyping, nil), func() tea.Msg { return NewTextMsg{} }
+
 		default:
+			m.stats.NumKeypresses++
+
 			if keypress == m.chars[m.pos].Val {
+				m.stats.NumCorrect++
+
 				m.chars[m.pos].State = character.CorrectState
 				m.pos++
 				if m.pos < len(m.text) {
@@ -34,6 +40,7 @@ func typingHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 					m.chars[m.pos].State = character.ActiveState
 				}
+
 			} else {
 				m.chars[m.pos].State = character.WrongState
 			}
@@ -42,7 +49,7 @@ func typingHandler(m AppModel, msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	if m.pos == len(m.text) {
 		// All of the current text is completed. Reset
-		return NewAppModel(StateTyping), func() tea.Msg { return NewTextMsg{} }
+		return NewAppModel(StateTyping, m.stats.Finish()), func() tea.Msg { return NewTextMsg{} }
 	}
 
 	return m, tea.Batch(cmds...)
