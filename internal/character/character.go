@@ -2,7 +2,7 @@ package character
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/dustin-ward/termtyping/internal/styles"
+	"github.com/dustin-ward/ttype/internal/styles"
 )
 
 const (

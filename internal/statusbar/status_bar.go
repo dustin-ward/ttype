@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/dustin-ward/termtyping/internal/stats"
-	"github.com/dustin-ward/termtyping/internal/styles"
+	"github.com/dustin-ward/ttype/internal/stats"
+	"github.com/dustin-ward/ttype/internal/styles"
 )
 
 type StatusBarState int
